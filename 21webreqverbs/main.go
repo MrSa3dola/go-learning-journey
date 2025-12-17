@@ -4,18 +4,20 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"strings"
 )
 
 func main() {
 	fmt.Println("web verb video - LCO")
-	url := "http://localhost:8000/post"
+	myurl := "http://localhost:8000/postform"
 	// PerformGetRequest(url)
-	PerformPostJSONRequest(url)
+	// PerformPostJSONRequest(url)
+	PerformPostFormRequest(myurl)
 }
 
-func PerformGetRequest(url string) {
-	response, err := http.Get(url)
+func PerformGetRequest(myurl string) {
+	response, err := http.Get(myurl)
 	checkNil(err)
 	defer response.Body.Close()
 
@@ -33,7 +35,7 @@ func PerformGetRequest(url string) {
 	// fmt.Println(content)
 	// fmt.Println(string(content))
 }
-func PerformPostJSONRequest(url string) {
+func PerformPostJSONRequest(myurl string) {
 	// fake JSON payload
 	requestBody := strings.NewReader(`
 		{
@@ -43,13 +45,26 @@ func PerformPostJSONRequest(url string) {
 		}
 	`)
 	// no ',' at the end of the requestBody, gives me error :"
-	response, err := http.Post(url, "application/json", requestBody)
+	response, err := http.Post(myurl, "application/json", requestBody)
 	checkNil(err)
 	
 	defer response.Body.Close()
 
 	content, err := io.ReadAll(response.Body)
 	checkNil(err)
+	fmt.Println("the content is:", string(content))
+}
+func PerformPostFormRequest(myurl string) {
+	// create a form data
+	data := url.Values{}
+	data.Add("firstname", "Saad")
+	data.Add("lastname", "Mohamed")
+	data.Add("email", "saad@go.com")
+	response, err := http.PostForm(myurl, data)
+	checkNil(err)
+	content, err := io.ReadAll(response.Body)
+	checkNil(err)
+	defer response.Body.Close()
 	fmt.Println("the content is:", string(content))
 }
 func checkNil(err error){
