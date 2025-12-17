@@ -23,10 +23,10 @@ func PerformGetRequest(myurl string) {
 
 	fmt.Println("Status code: ", response.StatusCode)
 	fmt.Println("Content length", response.ContentLength)
-	
-	// string builder is more effecient  
+
+	// string builder is more effecient
 	var responseString strings.Builder
-	content, err  := io.ReadAll(response.Body)
+	content, err := io.ReadAll(response.Body)
 	checkNil(err)
 	byteCount, _ := responseString.Write(content)
 	fmt.Println("byte count is", byteCount) // length
@@ -47,7 +47,7 @@ func PerformPostJSONRequest(myurl string) {
 	// no ',' at the end of the requestBody, gives me error :"
 	response, err := http.Post(myurl, "application/json", requestBody)
 	checkNil(err)
-	
+
 	defer response.Body.Close()
 
 	content, err := io.ReadAll(response.Body)
@@ -67,8 +67,8 @@ func PerformPostFormRequest(myurl string) {
 	defer response.Body.Close()
 	fmt.Println("the content is:", string(content))
 }
-func checkNil(err error){
-	if err != nil{
+func checkNil(err error) {
+	if err != nil {
 		panic(err)
 	}
 }
